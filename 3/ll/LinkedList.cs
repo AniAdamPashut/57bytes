@@ -1,25 +1,25 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-public class LinkedList : IEnumerable
+public class LinkedList : IEnumerable<int>
 {
     private Node<int>? head;
     private Node<int>? tail;
 
-    private Node<int> max;
-    private Node<int> min;
+    private int max;
+    private int min;
 
     public LinkedList() {
 
         head = new Node<int>();
         tail = head;
-        max = new Node<int>(int.MinValue, null);
-        min = new Node<int>(int.MaxValue, null); 
+        max = int.MinValue;
+        min = int.MaxValue;
     }
 
     public void Append(int item)
@@ -32,23 +32,29 @@ public class LinkedList : IEnumerable
         {
             tail.next = new Node<int>(item, null);
         }
-        max = new Node<int>(Math.Max(item, max.value), max);
-        min = new Node<int>(Math.Min(item, min.value), min);
+        max = Math.Max(item, max);
+        min = Math.Min(item, min);
         tail = tail.next;
     }
 
     public void Prepend(int item)
     {
         head = new Node<int>(item, head);
-        max = new Node<int>(Math.Max(item, max.value), max);
-        min = new Node<int>(Math.Min(item, min.value), min);
+        max = Math.Max(item, max);
+        min = Math.Min(item, min);
     }
     public int Dequeue() {
-        int value = head.value;
+        int val = head.value;
         head = head.next;
-        max = max.next;
-        min = min.next;
-        return value;
+        if (val == max)
+        {
+            max = this.Max();
+        }
+        else if (val == min)
+        {
+            min = this.Min();
+        }
+        return val;
     }
 
     public int Pop()
@@ -60,8 +66,14 @@ public class LinkedList : IEnumerable
         }
         int val = runner.next.value;
         runner.next = null;
-        max = max.next;
-        min = min.next;
+
+        if (val == max)
+        {
+            max = this.Max();
+        } else if (val == min)
+        {
+            min = this.Min();
+        }
         return val;
     }
 
@@ -105,21 +117,26 @@ public class LinkedList : IEnumerable
 
     public int GetMaxNode()
     {
-        return max.value;
+        return max;
     }
     public int GetMinNode()
     {
-        return min.value;
+        return min;
     }
 
-    IEnumerator IEnumerable.GetEnumerator()
+    IEnumerator<int> IEnumerable<int>.GetEnumerator()
     {
-        return (IEnumerator)GetEnumerator();
+        return (IEnumerator<int>)GetEnumerator();
     }
 
     public LinkedListIterator GetEnumerator()
     {
         return new LinkedListIterator(head);
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        throw new NotImplementedException();
     }
 }
 

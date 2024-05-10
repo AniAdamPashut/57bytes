@@ -79,15 +79,15 @@ public class Expressive : IExpressable
         }
         return l;
     }
-    public string getStringValue(int number)
+    public string Express(int number)
     {
         if (number < 21)
         {
             return getNumber(number, "");
         }
         List<int> l = splitNumber(number);
-        string hundred = "Hundred ";
-        List<string> strings = new List<string>();
+        var hundred = "Hundred ";
+        var strings = new List<string>();
         
 
         foreach (var (num, suff) in l.Zip(suffixes))

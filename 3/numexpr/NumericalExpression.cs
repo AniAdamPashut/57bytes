@@ -4,7 +4,7 @@
     internal class NumericalExpression
     {
         private int number;
-        private IExpressable expr;
+        private IExpressable expr; // Func<int, string> 🤡🤡🤡
 
         public NumericalExpression(int n)
         {
@@ -34,7 +34,7 @@
 
         public override string ToString()
         {
-            return expr.getStringValue(number);
+            return expr.Express(number);
         }
     }
 }

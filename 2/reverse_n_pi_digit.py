@@ -10,7 +10,7 @@ def reverse_n_pi_digits_readable(n: int) -> int:
 
 # 3-liner
 def reverse_n_pi_digits(n: int) -> str:
-    def inner(curr, i):
+    def inner(curr, i): # where is my tail call opt??
         return str(curr % 10) + inner(curr // 10, i - 1) if curr > 0 else ''
     return inner(int(math.pi * (10 ** n)), n)
 

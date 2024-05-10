@@ -7,11 +7,9 @@ from typing import Sequence, TypeVar, TypeAlias
 T = TypeVar('T')  # No python 3.12
 TriSeq: TypeAlias = tuple[Sequence[T], Sequence[T], Sequence[T]]
 
+# Aint gonna fight Exception-based control flow, but I don't like it
+
 def seperate(word: Sequence[T], is_odd: bool) -> TriSeq:
-    """
-    Separates a sequence based on it's length
-    uses error based control flow, i dont like it but it's an option
-    """
     if is_odd:
         middle = len(word) // 2
         return word[:middle], word[middle + 1:], word[middle]
@@ -22,10 +20,6 @@ def seperate(word: Sequence[T], is_odd: bool) -> TriSeq:
 
 
 def is_sorted_polyndrom(word: str) -> bool:
-    """
-    Takes a string and checks if its a sorted polyndrom
-    uses error based control flow, i dont like it but it's an option
-    """
     try:
         left, right, acc = seperate(word, len(word) % 2 != 0)
     except ValueError:
