@@ -3,22 +3,22 @@
 
     internal class NumericalExpression
     {
-        private int number;
-        private IExpressable expr; // Func<int, string> 🤡🤡🤡
+        private int Number;
+        private IExpressable Expr; // Func<int, string> 🤡🤡🤡
 
         public NumericalExpression(int n)
         {
-            number = n;
-            expr = new Expressive();
+            Number = n;
+            Expr = new Expressive();
         }
         public NumericalExpression(int n, IExpressable e)
         {
-            number = n;
-            expr = e;
+            Number = n;
+            Expr = e;
         }
         public int GetValue()
         {
-            return number;
+            return Number;
         }
 
         public int SumLetters()
@@ -34,7 +34,7 @@
 
         public override string ToString()
         {
-            return expr.Express(number);
+            return Expr.Express(Number);
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 public class Expressive : IExpressable
 {
-    private string[] wordmap =
+    private readonly string[] wordmap =
     {
         "Zero ",
         "One ",
@@ -39,7 +39,7 @@ public class Expressive : IExpressable
         "Ninty "
     };
 
-    private string[] suffixes =
+    private readonly string[] suffixes =
     {
         "",
         "Thousand ",
@@ -52,16 +52,12 @@ public class Expressive : IExpressable
     {
 
     }
-    private string getSmall(int number)
-    {
-        return wordmap[number];
-    }
-    private string getNumber(int number, string suff)
+    private string GetNumber(int number, string suff)
     {
         return wordmap[number] + suff;
     }
 
-    private string getNumber10(int number, string suff)
+    private string GetNumber10(int number, string suff)
     {
         if (number == 1)
         {
@@ -69,9 +65,9 @@ public class Expressive : IExpressable
         }
         return wordmap[number + 19] + suff;
     }
-    private List<int> splitNumber(int number)
+    private List<int> SplitNumber(int number)
     {
-        List<int> l = new List<int>();
+        List<int> l = new();
         while (number > 0)
         {
             l.Add(number % 1000);
@@ -83,9 +79,9 @@ public class Expressive : IExpressable
     {
         if (number < 21)
         {
-            return getNumber(number, "");
+            return GetNumber(number, "");
         }
-        List<int> l = splitNumber(number);
+        List<int> l = SplitNumber(number);
         var hundred = "Hundred ";
         var strings = new List<string>();
         
@@ -99,7 +95,7 @@ public class Expressive : IExpressable
             }
             if (num > 99)
             {
-                str += getNumber(num / 100, hundred);
+                str += GetNumber(num / 100, hundred);
             }
             int temp = num % 100;
             if (temp == 0)
@@ -110,11 +106,11 @@ public class Expressive : IExpressable
             }
             if (temp < 21)
             {
-                str += getNumber(temp, suff);
+                str += GetNumber(temp, suff);
             }
             else
             { 
-                str += getNumber10(temp / 10, "") + getNumber(temp % 10, suff);
+                str += GetNumber10(temp / 10, "") + GetNumber(temp % 10, suff);
             }
             strings.Add(str);
         }

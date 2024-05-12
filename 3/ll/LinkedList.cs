@@ -8,51 +8,82 @@ using System.Xml.Linq;
 
 public class LinkedList : IEnumerable<int>
 {
-    private Node<int>? head;
-    private Node<int>? tail;
+    private Node<int> head;
+    private Node<int> tail;
 
-    private int max;
-    private int min;
+    private Node<int> max;
+    private Node<int> min;
 
     public LinkedList() {
 
-        head = new Node<int>();
+        head = null;
         tail = head;
-        max = int.MinValue;
-        min = int.MaxValue;
+        max = head;
+        min = head;
     }
 
     public void Append(int item)
     {
-        if (tail == null)
+        if (tail == head)
         {
             tail = new Node<int>(item, null);
             head = tail;
+            max = tail;
+            min = tail;
+            return;
         } else
         {
-            tail.next = new Node<int>(item, null);
+            tail.Next = new Node<int>(item, null);
+            tail = tail.Next;
         }
-        max = Math.Max(item, max);
-        min = Math.Min(item, min);
-        tail = tail.next;
+        int max_value = Math.Max(item, max.Value);
+        if (max_value != max.Value)
+        {
+            max = tail;
+        }
+        int min_value = Math.Min(item, min.Value);
+        if (min_value != min.Value)
+        {
+            min = tail;
+        }
     }
 
     public void Prepend(int item)
     {
         head = new Node<int>(item, head);
-        max = Math.Max(item, max);
-        min = Math.Min(item, min);
+        if (item > max.Value)
+        {
+            max = head;
+        }
+        if (item < min.Value)
+        {
+            min = head;
+        }
+    }
+
+    private Node<int> Find(Func<int, int, int> cmp)
+    {
+        Node<int> runner = head;
+        Node<int> res = new(0, null);
+        while (runner != null)
+        {
+            if (cmp(res.Value, runner.Value) > 0)
+            {
+                res = runner;
+            }
+        }
+        return res;
     }
     public int Dequeue() {
-        int val = head.value;
-        head = head.next;
-        if (val == max)
+        int val = head.Value;
+        head = head.Next;
+        if (val == max.Value)
         {
-            max = this.Max();
+            max = Find((a, b) => a - b);
         }
-        else if (val == min)
+        else if (val == min.Value)
         {
-            min = this.Min();
+            min = Find((a, b) => b - a);
         }
         return val;
     }
@@ -60,66 +91,78 @@ public class LinkedList : IEnumerable<int>
     public int Pop()
     {
         Node<int> runner = head;
-        while (runner.next.next != null)
+        if (runner == null)
         {
-            runner = runner.next;
+            return -1;
         }
-        int val = runner.next.value;
-        runner.next = null;
+        if (runner.Next == null) {
+        
+        }
+        while (runner.Next.Next != null)
+        {
+            runner = runner.Next;
+        }
+        int val = runner.Next.Value;
+        runner.Next = null;
 
-        if (val == max)
+        if (val == max.Value)
         {
-            max = this.Max();
-        } else if (val == min)
+            max = Find((a, b) => a - b);
+        }
+        else if (val == min.Value)
         {
-            min = this.Min();
+            min = Find((a, b) => b - a);
         }
         return val;
     }
 
-    public bool isCircular()
+    public bool IsCircular()
     {
         if (head == null) return false;
 
         Node<int> slow = head;
-        Node<int> fast = head.next;
+        Node<int> fast = head.Next;
 
-        while (fast != null && fast.next != null)
+        while (fast != null && fast.Next != null)
         {
             if (fast == slow) return true;
-            fast = fast.next.next;
-            slow = slow.next;
+            fast = fast.Next.Next;
+            slow = slow.Next;
         }
         return false;
     }
 
     public void Sort()
     {
+        if (head == null)
+        {
+            return;
+        }
         Node<int> current = head;
         while (current != null)
         {
 
-            Node<int> second = current.next;
+            Node<int> second = current.Next;
             while (second != null)
             {
 
-                if (current.value > second.value)
+                if (current.Value > second.Value)
                 {
-                    int tmp = current.value;
-                    current.value = second.value;
-                    second.value = tmp;
+                    int tmp = current.Value;
+                    current.Value = second.Value;
+                    second.Value = tmp;
                 }
-                second = second.next;
+                second = second.Next;
             }
-            current = current.next;
+            current = current.Next;
         }
     }
 
-    public int GetMaxNode()
+    public Node<int> GetMaxNode()
     {
         return max;
     }
-    public int GetMinNode()
+    public Node<int> GetMinNode()
     {
         return min;
     }
@@ -142,32 +185,32 @@ public class LinkedList : IEnumerable<int>
 
 public class LinkedListIterator : IEnumerator
 {
-    public Node<int> head { get; set; }
-    public Node<int> runner { get; set; }
+    public Node<int> Head { get; set; }
+    public Node<int> Runner { get; set; }
     public LinkedListIterator(Node<int> head)
     {
-        this.head = head;
-        this.runner = head;
+        this.Head = head;
+        this.Runner = head;
     }
 
     object IEnumerator.Current
     {
         get
         {
-            return head;
+            return Head;
         }
     }
 
 
     public bool MoveNext()
     {
-        runner = runner.next;
-        return runner != null;
+        Runner = Runner.Next;
+        return Runner != null;
     }
 
     public void Reset()
     {
-        runner = head;
+        Runner = Head;
     }
 
     public int Current
@@ -176,7 +219,7 @@ public class LinkedListIterator : IEnumerator
         {
             try
             {
-                return runner.value;
+                return Runner.Value;
             }
             catch (IndexOutOfRangeException)
             {
